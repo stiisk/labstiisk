@@ -1,0 +1,129 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: auto;
+  max-width: 38rem;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: auto; /* Ensure scrollbar appears when needed */
+}
+
+#progress-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: #e0e0e0;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0;
+  background-color: #76c7c0;
+  transition: width 0.25s;
+}
+
+h1 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+#purpose-input, #timer-display {
+  margin-top: 2rem;
+}
+
+input {
+  font-size: 1rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+.custom-btn {
+  background-color: #d3d3d3; /* Light gray button */
+  color: #333; /* Darker text color */
+  border: none; /* Remove borders */
+  padding: 0.5rem 1rem; /* Add padding */
+  border-radius: 4px; /* Slightly rounded corners */
+}
+
+.custom-btn:hover {
+  background-color: #c0c0c0; /* Slightly darker gray on hover */
+}
+
+#time-left {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 2rem 0;
+}
+
+#purpose-display {
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+/* Add these styles for raindrop animation */
+.raindrop {
+  position: absolute;
+  bottom: 100%;
+  width: 2px;
+  height: 10px;
+  background: blue;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+#fireworks-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.firework {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: red;
+  border-radius: 50%;
+  animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(50);
+    opacity: 0;
+  }
+}
+
+#purpose-help {
+    cursor: pointer;
+    font-weight: bold;
+    color: #a3a3a3;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    line-height: 30px;
+    text-align: center;
+    background-color: white; /* Add this line */
+    border-radius: 50%; /* Add this line to make it circular */
+    border: 1px solid #a3a3a3; /* Add a border for better visibility */
+    margin-left: 10px; /* Add some space between input and button */
+}
+
+#purpose-help:hover {
+    background-color: #7e7e7e;
+    color: white;
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>60-Minute Timer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+    <div class="container">
+        <div id="progress-bar-container" class="mb-3">
+            <div id="progress-bar" class="bg-success" style="height: 5px; width: 0;"></div>
+        </div>
+        <div id="purpose-input" class="mb-3">
+            <div class="input-group">
+                <input type="text" id="activity-purpose" class="form-control" placeholder="Enter the purpose" />
+                <div class="input-group-append">
+                    <button id="purpose-help" class="btn btn-outline-secondary rounded-circle" type="button">?</button>
+                </div>
+            </div>
+            <button id="start-timer" class="custom-btn mt-2">Start</button>
+        </div>
+        <div id="timer-display" style="display: none;" class="mb-3">
+            <h2 id="purpose-display"></h2>
+            <div id="time-left" class="display-4">60:00</div>
+            <button id="pause-timer" class="custom-btn">Pause</button>
+            <button id="reset-timer" class="custom-btn">Reset</button>
+        </div>
+        <div id="checklist" class="mb-3">
+            <h2>To Do</h2>
+            <ul id="checklist-items" class="list-group">
+                <li class="list-group-item">
+                    <input type="checkbox" class="check-item" />
+                    <input type="text" class="check-text form-control d-inline-block" placeholder="New Task" style="width: 70%;" />
+                </li>
+            </ul>
+            <div id="completion-status" style="display: none;">Completion: 0%</div>
+        </div>
+        <audio id="rain-sound" loop>
+            <source src="assets/raining_sound.mp3" type="audio/mpeg" />
+        </audio>
+        <div id="fireworks-container" class="fireworks"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.x/dist/index.umd.js"></script>
+    <script src="timer.js"></script>
+    <script>
+        function updateCompletionStatus() {
+            const checkItems = document.querySelectorAll('.check-item');
+            const totalItems = Array.from(checkItems).filter(item => item.nextElementSibling.value.trim() !== '').length;
+            const completedItems = Array.from(checkItems).filter(item => item.checked && item.nextElementSibling.value.trim() !== '').length;
+            const completionPercentage = (completedItems / totalItems) * 100;
+            document.getElementById('completion-status').innerText = `Completion: ${completionPercentage}%`;
+            document.getElementById('progress-bar').style.width = `${completionPercentage}%`;
+
+            if (completionPercentage === 100) {
+                window.electron.send('show-fireworks');
+                resetAll();
+            }
+        }
+
+        function addNewChecklistItem() {
+            const newItem = document.createElement('li');
+            newItem.className = 'list-group-item';
+            newItem.innerHTML = '<input type="checkbox" class="check-item"> <input type="text" class="check-text form-control d-inline-block" placeholder="New Task" style="width: 70%;">';
+            document.getElementById('checklist-items').appendChild(newItem);
+            newItem.querySelector('.check-item').addEventListener('change', updateCompletionStatus);
+            newItem.querySelector('.check-text').addEventListener('input', handleChecklistInput);
+            newItem.querySelector('.check-text').addEventListener('keypress', handleChecklistEnter);
+        }
+
+        function handleChecklistInput(event) {
+            const input = event.target;
+            if (input.value.trim() !== '' && input.parentElement.nextElementSibling === null) {
+                addNewChecklistItem();
+            }
+            updateCompletionStatus();
+        }
+
+        function handleChecklistEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                if (input.value.trim() !== '') {
+                    addNewChecklistItem();
+                    input.parentElement.nextElementSibling.querySelector('.check-text').focus();
+                }
+            }
+        }
+
+        document.querySelectorAll('.check-item').forEach(item => {
+            item.addEventListener('change', updateCompletionStatus);
+        });
+
+        document.querySelectorAll('.check-text').forEach(item => {
+            item.addEventListener('input', handleChecklistInput);
+            item.addEventListener('keypress', handleChecklistEnter);
+        });
+    </script>
+</body>
+</html>
